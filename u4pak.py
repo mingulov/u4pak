@@ -230,7 +230,7 @@ class Pak(object):
 		elif self.version == 2:
 			read_record = read_record_v2
 
-		elif self.version == 3:
+		elif self.version in (3, 4):
 			read_record = read_record_v3
 
 		def check_data(ctx, offset, size, sha1):
@@ -666,7 +666,7 @@ def read_index(stream,check_integrity=False):
 	elif version == 2:
 		read_record = read_record_v2
 
-	elif version == 3:
+	elif version in (3, 4):
 		read_record = read_record_v3
 
 	else:
@@ -703,7 +703,7 @@ def pack(stream,files_or_dirs,mount_point,version=3,compression_method=COMPR_NON
 	elif version == 2:
 		write_record = write_record_v2
 
-	elif version == 3:
+	elif version in (3, 4):
 		write_record = write_record_v3
 
 	else:
@@ -776,7 +776,7 @@ def update(stream,mount_point,insert=None,remove=None,compression_method=COMPR_N
 			size = os.path.getsize(filename)
 			return RecordV2(filename, None, size, size, COMPR_NONE, None)
 
-	elif pak.version == 3:
+	elif pak.version in (3, 4):
 		write_record = write_record_v3
 		def make_record(filename):
 			size = os.path.getsize(filename)
@@ -1449,7 +1449,7 @@ def main(argv):
 
 	pack_parser = subparsers.add_parser('pack',aliases=('c',),help="pack archive")
 	pack_parser.set_defaults(command='pack')
-	pack_parser.add_argument('--archive-version',type=int,choices=[1,2,3],default=3,help='archive file format version')
+	pack_parser.add_argument('--archive-version',type=int,choices=[1,2,3,4],default=4,help='archive file format version')
 	pack_parser.add_argument('--mount-point',type=str,default=os.path.join('..','..','..',''),help='archive mount point relative to its path')
 	add_print0_arg(pack_parser)
 	add_verbose_arg(pack_parser)
